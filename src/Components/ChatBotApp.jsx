@@ -19,7 +19,7 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
     }
 
     const sendMessage = () => {
-      if (inputValue.trim === '') return
+      if (inputValue.trim() === '') return
 
       const newMessage = {
         type: 'prompt',
@@ -27,7 +27,11 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
         timestamp: new Date().toLocaleTimeString(),
       }
 
-      const updatedMessages = [...messages, newMessage]
+      if(!activeChat) {
+        onNewChat(inputValue)
+        setInputValue("")
+      } else {
+        const updatedMessages = [...messages, newMessage]
       setMessages(updatedMessages)
       setInputValue('')
 
@@ -38,6 +42,7 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
         return chat
       })
       setChats(updatedChats)
+      }
     }
 
     const handleKeyDown = (e) => {
@@ -51,18 +56,34 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
       setActiveChat(id)
     }
 
+    const handleDeleteChat = (id) => {
+      const updatedChats = chats.filter((chat) => chat.id !== id)
+      setChats(updatedChats)
+      
+      if(id === activeChat) {
+        const newActiveChat = updatedChats.length > 0 ?
+        updatedChats[0].id : null
+        setActiveChat(newActiveChat)
+      }
+    }
+
   return ( 
   <div className="chat-app">
     <div className="chat-list">
         <div className="chat-list-header">
             <h2>Chat List</h2>
-            <i className="bx bx-edit-alt new-chat" onClick={onNewChat}></i>
+            <i className="bx bx-edit-alt new-chat" onClick={() => onNewChat()}></i>
         </div>
         {chats.map((chat) => (
-          <div key={chat.id} className={`chat-list-item ${chat.id === activeChat ? 'active' : ''}`} 
+          <div 
+          key={chat.id} 
+          className={`chat-list-item ${chat.id === activeChat ? 'active' : ''}`} 
           onClick={() => handleSelectChat(chat.id)}>
-          <h4>{chat.id}</h4>  
-          <i className="bx bx-x-circle"></i>
+          <h4>{chat.displayId}</h4>  
+          <i className="bx bx-x-circle" onClick={(e) => {
+            e.stopPropagation()
+            handleDeleteChat(chat.id)
+          }}></i>
         </div>
         ))}
     </div>
