@@ -1,6 +1,6 @@
 import React from 'react'
 import './ChatBotApp.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 
 
@@ -8,6 +8,8 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
   const [inputValue, setInputValue] = useState('')
   const [messages, setMessages] = useState(chats[0]?.messages || [])
   const [isTyping, setIsTyping] = useState(false)
+  const chatEndRef = useRef(null)
+  
 
     useEffect(() => {
       const activeChatObj = chats.find((chat) => chat.id === activeChat)
@@ -49,7 +51,7 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer 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`,
+          Authorization: `Bearer `,
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
@@ -103,6 +105,10 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
       }
     }
 
+    useEffect(() => {
+      chatEndRef.current?.scrollIntoView({ behavior: "smooth"})
+    }, [messages])
+
   return ( 
   <div className="chat-app">
     <div className="chat-list">
@@ -136,6 +142,7 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
           </div>
         ))} 
         {isTyping && <div className="typing">Typing...</div>}
+        <div ref={chatEndRef}></div>
       </div>
         <form className="msg-form" onSubmit={() => e.preventDefault()}>
             <i className="bx bxs-smile"></i>
