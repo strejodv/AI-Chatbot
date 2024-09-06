@@ -159,6 +159,7 @@
     align-items: center;
     box-shadow: 0 -.2rem .5rem rgba(0, 0, 0, 0.1);
     padding-right: 5rem;
+    position: relative;
 }
 
 .msg-form i {
@@ -172,6 +173,12 @@
     width: 10rem;
     display: flex;
     justify-content: center;
+}
+
+.picker {
+    position: absolute;
+    bottom: 7rem;
+    left: 8rem;
 }
 
 .msg-input {
@@ -193,6 +200,50 @@
     opacity: 0;
 }
 
+@media (max-width: 900px) {
+    .chat-app {
+        flex-direction: column;
+    }
+    .chat-list {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 40%;
+        height: 100%;
+        transform: translateX(-100%);
+        z-index: 1000;
+    }
+
+    .chat-list.show {
+        transform: translateX(0);
+    }
+
+    .chat-window {
+        width: 100%;
+    }
+
+    .chat-title h3 {
+        padding-left: 5rem;
+    }
+
+    .chat-title i.bx-menu{
+        font-size: 3rem;
+        color: #fff;
+        display: block;
+        cursor: pointer;
+        position: absolute;
+    }
+}
+
+@media (max-width: 500px) {
+    .chat-list {
+        width: 60%;
+    }
+
+    .picker {
+        left: 1rem;
+    }
+}
 
 
 
